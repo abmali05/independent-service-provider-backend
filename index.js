@@ -17,14 +17,22 @@ async function run() {
     try {
         await client.connect();
         const inventoryCollection = client.db('inventory').collection('product');
-        app.get('/manageitems', async (req, res) => {
+
+        app.get('/inventory', async (req, res) => {
 
             const query = {};
             const cursor = inventoryCollection.find(query);
             const products = await cursor.toArray();
             res.send(products);
 
-        })
+        });
+
+        app.get('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const productDetails = await inventoryCollection.findOne(query);
+            res.send(productDetails);
+        });
 
 
 
