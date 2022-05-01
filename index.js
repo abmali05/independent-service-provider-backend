@@ -8,7 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const uri = `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASS}@cluster0.n2zk3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+
+const uri = `mongodb+srv://${process.env.DATABASE_USER}:${process.env.DATABASE_PASS}@cluster0.n2zk3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority&ssl=true`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -32,6 +33,26 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const productDetails = await inventoryCollection.findOne(query);
             res.send(productDetails);
+        });
+
+
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedQuantity = req.body;
+            console.log(updatedQuantity);
+            const filter = { _id: ObjectId(id) };
+            console.log(filter);
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: {
+
+                    quantity: updatedQuantity.quantity,
+                },
+            };
+            const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
+            console.log(result);
+            res.send(result);
+
         });
 
 
