@@ -48,9 +48,16 @@ async function run() {
                     quantity: updatedQuantity.quantity,
                 },
             };
-            const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
-            res.send(result);
+            const productUpdate = await inventoryCollection.updateOne(filter, updatedDoc, options);
+            res.send(productUpdate);
 
+        });
+
+        app.delete('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const productDelete = await inventoryCollection.deleteOne(query);
+            res.send(productDelete);
         });
 
 
