@@ -19,12 +19,13 @@ async function run() {
     try {
         await client.connect();
         const inventoryCollection = client.db('inventory').collection('product');
+        // const userCollection = client.db('inventory').collection('userproduct');
 
         app.get('/inventory', async (req, res) => {
-
+            const dscSort = { _id: -1 }
             const query = {};
             const cursor = inventoryCollection.find(query);
-            const products = await cursor.toArray();
+            const products = await cursor.sort(dscSort).toArray();
             res.send(products);
 
         });
@@ -60,7 +61,11 @@ async function run() {
             res.send(productDelete);
         });
 
-
+        app.post('/addproduct', async (req, res) => {
+            const order = req.body;
+            const result = await inventoryCollection.insertOne(order);
+            res.send(result);
+        })
 
     }
     finally {
