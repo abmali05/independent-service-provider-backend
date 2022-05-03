@@ -62,10 +62,22 @@ async function run() {
         });
 
         app.post('/addproduct', async (req, res) => {
-            const order = req.body;
-            const result = await inventoryCollection.insertOne(order);
-            res.send(result);
+            const product = req.body;
+            const addProduct = await inventoryCollection.insertOne(product);
+            res.send(addProduct);
         })
+
+        app.get('/myproduct', async (req, res) => {
+            const email = req.query.email;
+            console.log(email);
+            // const dscSort = { _id: -1 };
+            const query = { email: email };
+            const cursor = inventoryCollection.find(query);
+            const products = await cursor.toArray();
+            res.send(products);
+
+        });
+
 
     }
     finally {
