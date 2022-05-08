@@ -69,7 +69,7 @@ async function run() {
 
         app.get('/myproduct', async (req, res) => {
             const email = req.query.email;
-            console.log(email);
+            // console.log(email);
             const dscSort = { _id: -1 };
             const query = { email: email };
             const cursor = inventoryCollection.find(query);
